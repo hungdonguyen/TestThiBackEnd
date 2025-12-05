@@ -6,17 +6,18 @@ namespace TestThiBackEnd.Models
     public class OrderItem
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-
         public int Id { get; set; }
-        public int OrderID { get; set; }
+
+        public int OrderId { get; set; }
 
         public int BookId { get; set; }
 
         public int Quantity { get; set; }
 
-        public double UnitPrice { get; set; }
+        // Sửa thành decimal?
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal? UnitPrice { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
     }
 }

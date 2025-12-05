@@ -1,28 +1,27 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestThiBackEnd.Models
 {
     public class User
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
         [StringLength(200)]
-        public string FullName { get; set; }
+        public string FullName { get; set; } = null!;
 
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-        public string Password { get; set; }
+        [StringLength(255)]
+        public string Email { get; set; } = null!;
 
         [Required]
+        public string Password { get; set; } = null!;
 
-        public string Role { get; set; }
+        [Required]
+        [StringLength(20)]
+        public string Role { get; set; } = null!;
 
-        public DateTime CreatedAt { get; set; }
-
+        public DateTime? CreateAt { get; set; } // Cho phép null
     }
 }

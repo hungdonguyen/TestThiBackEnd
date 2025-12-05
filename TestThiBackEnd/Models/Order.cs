@@ -1,25 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestThiBackEnd.Models
 {
     public class Order
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string UserId { get; set; }
 
+        public int UserId { get; set; }
+
+        [Required]
         public DateTime OrderDate { get; set; }
 
-        public double TotalAmount { get; set; }
+        // Sửa thành decimal? (Nullable Decimal)
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal? TotalAmount { get; set; }
 
-        public string Status { get; set; }
+        [StringLength(20)]
+        public string? Status { get; set; } // Cho phép null
 
-        
-        public DateTime CreatedAt { get; set; }
-
-
+        public DateTime? CreatedAt { get; set; }
     }
 }
