@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -6,13 +6,21 @@ using TestThiBackEnd;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-// Load JWT settings from configuration
+// --- PHẦN 1: ĐĂNG KÝ DỊCH VỤ (Phải làm TRƯỚC Build) ---
+
+// 1. Thêm Controllers (Bắt buộc cho API)
+builder.Services.AddControllers();
+
+// 2. Đăng ký DbContext (Đưa lên trên Build)
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 3. Cấu hình JWT (Giữ nguyên code của bạn)
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = jwtSettings["SecretKey"];
 var issuer = jwtSettings["Issuer"];
 var audience = jwtSettings["Audience"];
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -27,21 +35,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
         };
     });
+
 builder.Services.AddAuthorization();
 
-
+// --- PHẦN 2: BUILD APP ---
 var app = builder.Build();
-app.UseAuthentication();
-app.UseAuthorization();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// --- PHẦN 3: CẤU HÌNH PIPELINE ---
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -50,8 +54,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Authentication phải đặt trước Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
+// Map Controllers để API hoạt động
+app.MapControllers();
 
 app.Run();
