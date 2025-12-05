@@ -3,7 +3,7 @@ using TestThiBackEnd.Models;
 using TestThiBackEnd.Repository;
 using TestThiBackEnd;
 
-namespace LibraryAPI.Repositories // Đảm bảo namespace đúng với dự án của bạn
+namespace TestThiBackEnd.Repositories // Đảm bảo namespace đúng với dự án của bạn
 {
     public class BookRepository : IBookRepository<Book>
     {

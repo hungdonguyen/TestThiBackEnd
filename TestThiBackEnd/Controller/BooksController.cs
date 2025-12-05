@@ -9,6 +9,12 @@ namespace TestThiBackEnd.Controller {
     public class BooksController : ControllerBase
     {
         private readonly IBookRepository<Book> _bookRepo;
+        // --- BỔ SUNG ĐOẠN NÀY ---
+        public BooksController(IBookRepository<Book> bookRepo)
+        {
+            _bookRepo = bookRepo;
+        }
+        // ------------------------
 
         [HttpGet]
         public async Task<IActionResult> GetAllBooks()

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using LibraryAPI.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TestThiBackEnd;
+using TestThiBackEnd.Models;
+using TestThiBackEnd.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // 2. Đăng ký DbContext (Đưa lên trên Build)
+// --- BỔ SUNG DÒNG NÀY ---
+builder.Services.AddScoped<IBookRepository<Book>, BookRepository>();
+// ------------------------
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // 3. Cấu hình JWT (Giữ nguyên code của bạn)
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
